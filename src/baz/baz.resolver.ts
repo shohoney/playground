@@ -1,4 +1,4 @@
-import { Resolver, ResolveReference } from '@nestjs/graphql';
+import { ResolveObjectType, Resolver, ResolveReference } from '@nestjs/graphql';
 import { Baz } from './baz.model';
 import { BazProvider } from './baz.provider';
 
@@ -8,5 +8,10 @@ export class BazResolver {
   @ResolveReference()
   async resolveReference(_ref: { __typename: string; id: string }) {
     return this.bazProvider.getBaz();
+  }
+
+  @ResolveObjectType()
+  async resolveObjectType() {
+    return await this.bazProvider.getBaz();
   }
 }

@@ -1,22 +1,13 @@
-import { Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { BarProvider } from 'src/bar/bar.provider';
+import { Query, Resolver } from '@nestjs/graphql';
 import { Foo } from './foo.model';
 import { FooProvider } from './foo.provider';
 
 @Resolver((of) => Foo)
 export class FooResolver {
-  constructor(
-    private readonly fooProvider: FooProvider,
-    private readonly barProvider: BarProvider, // I think this is less than ideal.
-  ) {}
+  constructor(private readonly fooProvider: FooProvider) {}
 
   @Query((returns) => Foo)
   async foo() {
     return await this.fooProvider.getAFoo();
-  }
-
-  @ResolveField()
-  async bar() {
-    return await this.barProvider.getABar();
   }
 }

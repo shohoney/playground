@@ -10,6 +10,8 @@ import { ViewerModule } from './viewer/viewer.module';
 import { CompanyModule } from './company/company.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { FooModule } from './foo/foo.module';
+import { BarModule } from './bar/bar.module';
+import { BazModule } from './baz/baz.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { FooModule } from './foo/foo.module';
     CompanyModule,
     ConfigurationModule,
     FooModule,
+    BarModule,
+    BazModule,
   ],
   controllers: [AppController],
   providers: [AppService],
