@@ -1,14 +1,25 @@
-import { ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Context,
+  Info,
+  Parent,
+  ResolveField,
+  ResolveObjectType,
+  Resolver,
+} from '@nestjs/graphql';
 import { Company } from './company.model';
 import { CompanyService } from './company.service';
 
 @Resolver((of) => Company)
 export class CompanyResolver {
-  constructor(private readonly companyService: CompanyService) {
+  constructor(private readonly companyService: CompanyService) {}
+
+  @ResolveField()
+  name() {
+    return '';
   }
 
-  async resolve(rootArgs) {
-    console.warn(rootArgs);
+  @ResolveObjectType()
+  async resolve(@Parent() p) {
     const company = await this.companyService.getCompany();
     return {
       name: company.company_name_looks_like_database,

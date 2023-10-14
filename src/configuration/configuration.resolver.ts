@@ -1,5 +1,5 @@
 import { Configuration } from './configuration.model';
-import { Resolver, ResolveField } from '@nestjs/graphql';
+import { Resolver, ResolveField, ResolveObjectType } from '@nestjs/graphql';
 
 @Resolver((of) => Configuration)
 export class ConfigurationResolver {
@@ -9,6 +9,7 @@ export class ConfigurationResolver {
 
     return 'wonky';
   }
+  @ResolveObjectType()
   resolve(rootArgs) {
     if (rootArgs.name === 'Tesla') return null;
     return {

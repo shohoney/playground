@@ -2,7 +2,7 @@
   "version": "v1",
   "packages": {
     "@nestjs/graphql": {
-      "signature": "f9e08fbad962a8b7f18703b6232be5ee",
+      "signature": "5e41fba908317d183f379d375336b00f",
       "file": true,
       "replaced": "^12.0.9"
     }

@@ -3,9 +3,6 @@ import { CompanyResolver } from './company.resolver';
 import { CompanyService } from './company.service';
 
 @Module({
-  providers: [
-    CompanyResolver,
-    CompanyService
-  ],
+  providers: [CompanyResolver, CompanyService],
 })
 export class CompanyModule {}
