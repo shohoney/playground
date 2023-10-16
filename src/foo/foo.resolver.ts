@@ -1,4 +1,4 @@
-import { Query, Resolver } from '@nestjs/graphql';
+import { Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { Foo } from './foo.model';
 import { FooProvider } from './foo.provider';
 
@@ -9,5 +9,13 @@ export class FooResolver {
   @Query((returns) => Foo)
   async foo() {
     return await this.fooProvider.getAFoo();
+  }
+
+  @ResolveField()
+  baz() {
+    return {
+      baz: 'im doing different things',
+      id: 'special',
+    }
   }
 }
