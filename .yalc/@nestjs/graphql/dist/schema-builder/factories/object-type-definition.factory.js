@@ -6,6 +6,9 @@ const common_1 = require("@nestjs/common");
 const shared_utils_1 = require("@nestjs/common/utils/shared.utils");
 const core_1 = require("@nestjs/core");
 const graphql_1 = require("graphql");
+const decorators_1 = require("../../decorators");
+const gql_paramtype_enum_1 = require("../../enums/gql-paramtype.enum");
+const params_factory_1 = require("../../factories/params.factory");
 const decorate_field_resolver_util_1 = require("../../utils/decorate-field-resolver.util");
 const orphaned_reference_registry_1 = require("../services/orphaned-reference.registry");
 const type_fields_accessor_1 = require("../services/type-fields.accessor");
@@ -16,7 +19,7 @@ const args_factory_1 = require("./args.factory");
 const ast_definition_node_factory_1 = require("./ast-definition-node.factory");
 const output_type_factory_1 = require("./output-type.factory");
 let ObjectTypeDefinitionFactory = exports.ObjectTypeDefinitionFactory = class ObjectTypeDefinitionFactory {
-    constructor(typeDefinitionsStorage, outputTypeFactory, typeFieldsAccessor, astDefinitionNodeFactory, orphanedReferenceRegistry, argsFactory, moduleRef) {
+    constructor(typeDefinitionsStorage, outputTypeFactory, typeFieldsAccessor, astDefinitionNodeFactory, orphanedReferenceRegistry, argsFactory, moduleRef, metadataScanner) {
         this.typeDefinitionsStorage = typeDefinitionsStorage;
         this.outputTypeFactory = outputTypeFactory;
         this.typeFieldsAccessor = typeFieldsAccessor;
@@ -24,6 +27,8 @@ let ObjectTypeDefinitionFactory = exports.ObjectTypeDefinitionFactory = class Ob
         this.orphanedReferenceRegistry = orphanedReferenceRegistry;
         this.argsFactory = argsFactory;
         this.moduleRef = moduleRef;
+        this.metadataScanner = metadataScanner;
+        this.gqlParamsFactory = new params_factory_1.GqlParamsFactory();
     }
     create(metadata, options) {
         const prototype = Object.getPrototypeOf(metadata.target);
@@ -125,22 +130,27 @@ let ObjectTypeDefinitionFactory = exports.ObjectTypeDefinitionFactory = class Ob
     }
     createFieldResolver(field, options) {
         const typeResolver = storages_1.TypeMetadataStorage.getResolverMetadataFor(field);
-        const rootFieldResolver = (root) => {
+        const rootFieldResolver = async (...gqlArgs) => {
+            const root = this.gqlParamsFactory.exchangeKeyForValue(gql_paramtype_enum_1.GqlParamtype.ROOT, undefined, gqlArgs);
+            const value = root[field.name];
             if (typeResolver) {
-                const instance = this.moduleRef.get(typeResolver.target, { strict: false, });
+                const gqlContext = this.gqlParamsFactory.exchangeKeyForValue(gql_paramtype_enum_1.GqlParamtype.CONTEXT, undefined, gqlArgs);
+                const contextId = core_1.ContextIdFactory.getByRequest(gqlContext);
+                const instance = await this.moduleRef.resolve(typeResolver.target, contextId, { strict: false, });
                 if (instance) {
-                    console.warn('ref found');
-                    return instance['resolve']?.(root);
+                    const annotatedMethod = this.metadataScanner.getAllMethodNames(instance).find(method => Reflect.hasMetadata(decorators_1.RESOLVE_OBJECT_TYPE_METADATA, instance[method]));
+                    if (annotatedMethod) {
+                        return instance[annotatedMethod](...gqlArgs);
+                    }
                 }
             }
-            const value = root[field.name];
             return typeof value === 'undefined' ? field.options.defaultValue : value;
         };
         const middlewareFunctions = (options.fieldMiddleware || []).concat(field.middleware || []);
         if (middlewareFunctions?.length === 0) {
             return rootFieldResolver;
         }
-        const rootResolveFnFactory = (root) => () => rootFieldResolver(root);
+        const rootResolveFnFactory = (...gqlParams) => () => rootFieldResolver(...gqlParams);
         return (0, decorate_field_resolver_util_1.decorateFieldResolverWithMiddleware)(rootResolveFnFactory, middlewareFunctions);
     }
 };
@@ -152,5 +162,6 @@ exports.ObjectTypeDefinitionFactory = ObjectTypeDefinitionFactory = tslib_1.__de
         ast_definition_node_factory_1.AstDefinitionNodeFactory,
         orphaned_reference_registry_1.OrphanedReferenceRegistry,
         args_factory_1.ArgsFactory,
-        core_1.ModuleRef])
+        core_1.ModuleRef,
+        core_1.MetadataScanner])
 ], ObjectTypeDefinitionFactory);

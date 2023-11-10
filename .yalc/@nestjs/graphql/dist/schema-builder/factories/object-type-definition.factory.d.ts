@@ -1,4 +1,4 @@
-import { ModuleRef } from '@nestjs/core';
+import { MetadataScanner, ModuleRef } from '@nestjs/core';
 import { GraphQLObjectType } from 'graphql';
 import { BuildSchemaOptions } from '../../interfaces';
 import { ObjectTypeMetadata } from '../metadata/object-type.metadata';
@@ -22,7 +22,9 @@ export declare class ObjectTypeDefinitionFactory {
     private readonly orphanedReferenceRegistry;
     private readonly argsFactory;
     private readonly moduleRef;
-    constructor(typeDefinitionsStorage: TypeDefinitionsStorage, outputTypeFactory: OutputTypeFactory, typeFieldsAccessor: TypeFieldsAccessor, astDefinitionNodeFactory: AstDefinitionNodeFactory, orphanedReferenceRegistry: OrphanedReferenceRegistry, argsFactory: ArgsFactory, moduleRef: ModuleRef);
+    private readonly metadataScanner;
+    private readonly gqlParamsFactory;
+    constructor(typeDefinitionsStorage: TypeDefinitionsStorage, outputTypeFactory: OutputTypeFactory, typeFieldsAccessor: TypeFieldsAccessor, astDefinitionNodeFactory: AstDefinitionNodeFactory, orphanedReferenceRegistry: OrphanedReferenceRegistry, argsFactory: ArgsFactory, moduleRef: ModuleRef, metadataScanner: MetadataScanner);
     create(metadata: ObjectTypeMetadata, options: BuildSchemaOptions): ObjectTypeDefinition;
     private generateInterfaces;
     private generateFields;

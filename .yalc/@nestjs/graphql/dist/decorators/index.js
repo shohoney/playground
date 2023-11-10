@@ -22,3 +22,4 @@ tslib_1.__exportStar(require("./resolver.decorator"), exports);
 tslib_1.__exportStar(require("./root.decorator"), exports);
 tslib_1.__exportStar(require("./scalar.decorator"), exports);
 tslib_1.__exportStar(require("./subscription.decorator"), exports);
+tslib_1.__exportStar(require("./resolve-object-type.decorator"), exports);

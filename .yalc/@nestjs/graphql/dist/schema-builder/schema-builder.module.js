@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GraphQLSchemaBuilderModule = void 0;
 const tslib_1 = require("tslib");
 const common_1 = require("@nestjs/common");
+const core_1 = require("@nestjs/core");
 const inspector_1 = require("@nestjs/core/inspector");
 const factories_1 = require("./factories/factories");
 const graphql_schema_factory_1 = require("./graphql-schema.factory");
@@ -25,6 +26,7 @@ exports.GraphQLSchemaBuilderModule = GraphQLSchemaBuilderModule = tslib_1.__deco
             type_mapper_service_1.TypeMapperSevice,
             type_fields_accessor_1.TypeFieldsAccessor,
             orphaned_reference_registry_1.OrphanedReferenceRegistry,
+            core_1.MetadataScanner,
         ],
         exports: [graphql_schema_factory_1.GraphQLSchemaFactory, file_system_helper_1.FileSystemHelper],
     })
