@@ -1,17 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+
 import { GraphQLModule } from '@nestjs/graphql';
 import {
   ApolloFederationDriver,
   ApolloFederationDriverConfig,
 } from '@nestjs/apollo';
-import { ViewerModule } from './viewer/viewer.module';
-import { CompanyModule } from './company/company.module';
-import { ConfigurationModule } from './configuration/configuration.module';
-import { FooModule } from './foo/foo.module';
-import { BarModule } from './bar/bar.module';
-import { BazModule } from './baz/baz.module';
+import { FooResolver } from './foo/foo.resolver';
+import { BarResolver } from './bar/bar.resolver';
+import { BazResolver } from './baz/baz.resolver';
+import { DataloadersModule } from './dataloaders.module';
 
 @Module({
   imports: [
@@ -27,15 +24,8 @@ import { BazModule } from './baz/baz.module';
         },
       }),
     }),
-    ViewerModule,
-    CompanyModule,
-    ConfigurationModule,
-    FooModule,
-    BarModule,
-    BazModule,
+    DataloadersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [FooResolver, BarResolver, BazResolver],
 })
 export class AppModule {}
-

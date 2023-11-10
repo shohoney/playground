@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { BazProvider } from './baz.provider';
-import { BazResolver } from './baz.resolver';
-
+import { BazModule as BazBusiness } from '../domain/baz/baz.module';
+import { BazDataloader } from './baz.dataloader';
 @Module({
-  providers: [BazResolver, BazProvider],
-  exports: [BazProvider],
+  imports: [BazBusiness],
+  providers: [BazDataloader],
+  exports: [BazDataloader],
 })
 export class BazModule {}

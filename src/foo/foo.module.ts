@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { FooProvider } from './foo.provider';
-import { FooResolver } from './foo.resolver';
-
+import { FooModule as FooBusiness } from '../domain/foo/foo.module';
+import { FooDataloader } from './foo.dataloader';
 @Module({
-  providers: [FooResolver, FooProvider],
+  imports: [FooBusiness],
+  providers: [FooDataloader],
+  exports: [FooDataloader],
 })
 export class FooModule {}
