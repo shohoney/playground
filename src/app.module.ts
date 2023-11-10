@@ -5,10 +5,7 @@ import {
   ApolloFederationDriver,
   ApolloFederationDriverConfig,
 } from '@nestjs/apollo';
-import { FooResolver } from './foo/foo.resolver';
-import { BarResolver } from './bar/bar.resolver';
-import { BazResolver } from './baz/baz.resolver';
-import { DataloadersModule } from './dataloaders.module';
+import { ResolversModule } from './resolvers.module';
 
 @Module({
   imports: [
@@ -24,8 +21,7 @@ import { DataloadersModule } from './dataloaders.module';
         },
       }),
     }),
-    DataloadersModule,
+    ResolversModule,
   ],
-  providers: [FooResolver, BarResolver, BazResolver],
 })
 export class AppModule {}
